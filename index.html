@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ItsMeXD Addons</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --mcpedl-green: #2ecc71;
+        --mcpedl-dark-bg: #1e1e1e;
+        --mcpedl-light-bg: #303030;
+        --mcpedl-text: #ffffff;
+        --mcpedl-border: #444444;
+        --page-padding-left: 80px; 
+    }
+
+    body {
+        margin: 0;
+        background: var(--mcpedl-dark-bg);
+        font-family: 'Roboto', sans-serif;
+        color: var(--mcpedl-text);
+        line-height: 1.5;
+    }
+
+    header {
+        background: var(--mcpedl-dark-bg);
+        padding: 20px 0;
+        text-align: center;
+    }
+
+    header h1 {
+        font-family: 'Roboto', sans-serif;
+        font-size: 32px;
+        font-weight: 900;
+        margin: 0;
+        color: var(--mcpedl-green);
+        text-shadow: none;
+    }
+
+    #searchBar {
+        width: 90%;
+        max-width: 600px;
+        padding: 15px 20px;
+        margin-top: 20px;
+        margin-bottom: 40px;
+        
+        margin-left: var(--page-padding-left); 
+        margin-right: auto; 
+        
+        display: block;
+        border-radius: 8px;
+        border: 1px solid var(--mcpedl-border);
+        background: var(--mcpedl-light-bg);
+        color: white;
+        font-size: 16px;
+        outline: none;
+        box-shadow: none;
+        transition: border-color 0.2s;
+    }
+
+    #searchBar:focus {
+        border-color: var(--mcpedl-green);
+    }
+
+    #searchBar::placeholder {
+        color: #888;
+    }
+
+    .container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, auto)); 
+        gap: 20px;
+        padding: 0 20px 0 0; 
+        max-width: 1200px; 
+        margin-left: var(--page-padding-left); 
+        margin-right: auto; 
+        justify-content: start; 
+    }
+
+    .card {
+        background: var(--mcpedl-light-bg);
+        border: 1px solid var(--mcpedl-border);
+        border-radius: 12px;
+        padding: 0;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        transition: transform 0.2s, box-shadow 0.2s;
+        height: auto; 
+        min-height: 300px; 
+        display: flex;
+        flex-direction: column;
+        max-width: 280px; 
+        position: relative; 
+        cursor: pointer; 
+        overflow: hidden;
+    }
+
+    .card:hover {
+        transform: translateY(-3px); 
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    }
+    
+    .card.hidden {
+        display: none !important; 
+    }
+
+    /* Inner Card Styles (Unchanged) */
+    .card-link { text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%; }
+    .image-wrapper { position: relative; width: 100%; }
+    .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 12px 12px 0 0; }
+    .text-content { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; }
+    .meta { font-size: 12px; color: #bbb; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
+    .meta img.avatar { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; }
+    .meta .rating { margin-left: auto; color: #ffcc00; }
+    .title { font-size: 18px; font-weight: 700; margin: 0 0 5px; color: var(--mcpedl-green); }
+    .desc { font-size: 13px; font-weight: 400; opacity: 0.9; margin-bottom: 0; flex-grow: 1; line-height: 1.4; }
+
+    @media (min-width: 1101px) {
+        .container {
+            /* Set max-width to exactly fit 3 cards + 2 gaps (880px) */
+            max-width: 880px;
+            
+            /* Ensure 3 columns are shown and they stop expanding */
+            grid-template-columns: repeat(3, 1fr); 
+            
+            /* Reset padding since the width is now fixed */
+            padding-right: 0;
+        }
+    }
+
+    @media (max-width: 1100px) {
+        /* Reduce left margin for tablets */
+        #searchBar, .container {
+            margin-left: 40px; 
+        }
+    }
+
+    @media (max-width: 700px) {
+        #searchBar {
+            max-width: 90%; 
+            margin-left: auto; 
+            margin-right: auto;
+        }
+
+        .container {
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 10px; 
+            max-width: 500px; 
+        }
+        
+        .card {
+            max-width: 100%; 
+        }
+    }
+</style>
+
+<script>
+function searchAddons() {
+    const input = document.getElementById("searchBar").value.trim().toLowerCase();
+    const cards = document.querySelectorAll(".container .card");
+
+    for (const card of cards) {
+        const title = card.querySelector(".title")?.innerText.toLowerCase() || "";
+        const desc = card.querySelector(".desc")?.innerText.toLowerCase() || "";
+
+        if (title.includes(input) || desc.includes(input)) {
+            card.classList.remove("hidden");
+        } else {
+            card.classList.add("hidden");
+        }
+    }
+}
+</script>
+</head>
+
+<body>
+
+<header>
+    <h1>ItsMeXD Addons</h1>
+</header>
+
+<input type="text" id="searchBar" onkeyup="searchAddons()" placeholder="Search, type and hit enter..." aria-label="Search Addons">
+
+<div class="container">
+
+    <div class="card">
+        <a href="mods/happy-ghast.html" class="card-link">
+            <div class="image-wrapper">
+                <img src="mods-pics/happy-ghast.png" alt="Happy Ghast Addon XD" loading="lazy">
+            </div>
+            <div class="text-content">
+                <div class="meta">
+                    <img src="itsmexd.png" class="avatar" alt="Author Avatar">
+                    By ItsMeXD | Published on June 23, 2025
+                    <span class="rating">⭐⭐⭐⭐⭐</span>
+                </div>
+                <div class="title">Custom Happy Ghast Fly Speed</div>
+                <div class="desc">Custom Happy Ghast Fly Speed gives the ability to fly it faster! This custom ghast behavior tweak adjusts its flying speed, turning the cute Happy Ghast into a speedster in the skies.</div>
+            </div>
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>

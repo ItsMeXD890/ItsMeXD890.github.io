@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Custom Happy Ghast Fly Speed</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --mcpedl-green: #2ecc71;
+        --mcpedl-dark-bg: #1e1e1e;
+        --mcpedl-light-bg: #303030;
+        --mcpedl-text: #ffffff;
+        --mcpedl-border: #444444;
+        --page-padding-left: 80px; 
+    }
+
+    body {
+        margin: 0;
+        background: var(--mcpedl-dark-bg);
+        font-family: 'Roboto', sans-serif;
+        color: var(--mcpedl-text);
+        line-height: 1.6;
+    }
+
+    .header-content, .main-content {
+        margin-left: var(--page-padding-left);
+        margin-right: auto;
+        max-width: 900px;
+        padding-top: 20px;
+        padding-bottom: 40px;
+        padding-right: 20px;
+    }
+
+    header {
+        background: var(--mcpedl-dark-bg);
+        padding: 20px 0;
+        border-bottom: 1px solid var(--mcpedl-border);
+    }
+    
+    .mod-title {
+        font-size: 36px;
+        font-weight: 900;
+        color: var(--mcpedl-green);
+        margin: 0 0 10px 0;
+    }
+    
+    .mod-meta {
+        font-size: 14px;
+        color: #bbb;
+        margin-bottom: 20px;
+    }
+    
+    .section-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--mcpedl-green);
+        border-bottom: 2px solid var(--mcpedl-border);
+        padding-bottom: 5px;
+        margin: 40px 0 20px 0;
+    }
+
+    .description p {
+        margin-bottom: 15px;
+    }
+
+    .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+    }
+    
+    .gallery img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        border: 1px solid var(--mcpedl-border);
+        object-fit: cover;
+    }
+    
+    .installation-steps {
+        list-style: none;
+        padding: 0;
+        counter-reset: step-counter;
+    }
+    
+    .installation-steps li {
+        counter-increment: step-counter;
+        background: var(--mcpedl-light-bg);
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 6px;
+        font-size: 15px;
+        border-left: 5px solid var(--mcpedl-green);
+    }
+    
+    .installation-steps li::before {
+        content: counter(step-counter);
+        color: var(--mcpedl-green);
+        font-weight: bold;
+        margin-right: 10px;
+        padding: 2px 8px;
+        background: #1e1e1e;
+        border-radius: 4px;
+        border: 1px solid var(--mcpedl-green);
+    }
+    
+    .download-section {
+        background: var(--mcpedl-light-bg);
+        padding: 30px;
+        border-radius: 12px;
+        margin-top: 50px;
+        border: 1px solid var(--mcpedl-border);
+        text-align: center;
+    }
+
+    .download-section h3 {
+        color: var(--mcpedl-green);
+        margin: 0 0 15px 0;
+        font-size: 22px;
+    }
+
+    .download-button {
+        display: inline-block;
+        background: var(--mcpedl-green);
+        color: var(--mcpedl-dark-bg);
+        font-weight: 900;
+        padding: 15px 30px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 18px;
+        transition: background-color 0.2s, transform 0.1s;
+        box-shadow: 0 4px 0 #1e8449;
+        cursor: pointer;
+        border: none;
+    }
+
+    .download-button:hover {
+        background-color: #27ae60;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 0 #1e8449;
+    }
+    
+    .download-button:active {
+        transform: translateY(2px);
+        box-shadow: 0 2px 0 #1e8449;
+    }
+
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.75);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 1;
+        transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.hidden {
+        opacity: 0;
+        visibility: hidden;
+    }
+    
+    .modal-content {
+        background: var(--mcpedl-light-bg);
+        border-radius: 12px;
+        width: 90%;
+        max-width: 600px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+        border: 1px solid var(--mcpedl-border);
+        transform: scale(1);
+        transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.hidden .modal-content {
+        transform: scale(0.95);
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        border-bottom: 1px solid var(--mcpedl-border);
+    }
+    
+    .modal-header h2 {
+        color: var(--mcpedl-green);
+        margin: 0;
+        font-size: 24px;
+    }
+
+    .close-button {
+        background: none;
+        border: none;
+        color: var(--mcpedl-text);
+        font-size: 30px;
+        cursor: pointer;
+        line-height: 1;
+        padding: 0 10px;
+        transition: color 0.2s;
+    }
+
+    .close-button:hover {
+        color: var(--mcpedl-green);
+    }
+    
+    .modal-body {
+        padding: 20px;
+        /* --- ADD THIS IF THERE'S MORE DOWNLOAD BUTTONS --- */
+        max-height: 70vh;
+        overflow-y: auto; /* Enable vertical scrolling when content exceeds max-height */
+    }
+
+    .file-category-title {
+        color: #ddd;
+        font-size: 18px;
+        font-weight: 700;
+        margin-top: 25px;
+        margin-bottom: 10px;
+        border-bottom: 1px dashed #444;
+        padding-bottom: 5px;
+    }
+    
+    .file-category-title:first-child {
+        margin-top: 0;
+    }
+
+    .file-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .file-item {
+        background: #2a2a2a;
+        color: var(--mcpedl-text);
+        padding: 12px 15px;
+        border-radius: 6px;
+        text-decoration: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background 0.2s, border-left 0.2s;
+        border-left: 5px solid transparent;
+    }
+    
+    .file-item:hover {
+        background: #3a3a3a;
+        border-left: 5px solid var(--mcpedl-green);
+    }
+    
+    .file-item span {
+        font-weight: 500;
+    }
+    
+    .file-meta {
+        font-size: 12px;
+        color: #aaa;
+        font-weight: 400 !important;
+        text-align: right;
+    }
+
+    @media (max-width: 1100px) {
+        .header-content, .main-content {
+            margin-left: 40px; 
+        }
+    }
+
+    @media (max-width: 700px) {
+        .header-content, .main-content {
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 15px; 
+            max-width: 100%;
+        }
+        
+        .mod-title {
+            font-size: 28px;
+            text-align: center;
+        }
+        
+        .download-button {
+            width: 100%;
+            display: block;
+        }
+        
+        .download-section {
+            padding: 20px 15px;
+        }
+        
+        .file-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .file-meta {
+            margin-top: 5px;
+            font-size: 11px;
+        }
+    }
+</style>
+
+<body>
+
+<header>
+    <div class="header-content">
+        <p class="mod-meta"><a href="mods_section.html" style="color: #ccc; text-decoration: none;">Mods</a> &gt; Custom Happy Ghast Fly Speed</p>
+        
+        <h1 class="mod-title">Custom Happy Ghast Fly Speed</h1>
+        
+        <div class="mod-meta">
+            By ItsMeXD | Supported Versions: Latest Versions | Downloads: 12k+
+        </div>
+    </div>
+</header>
+
+<main class="main-content">
+    
+    <div class="description">
+        <p><strong>Custom Happy Ghast Fly Speed Addon</strong> gives you the ability to make the Happy Ghast fly much faster! This behavior pack modifies the ghast's default flight speed, turning the adorable Happy Ghast into a high-speed sky glider.</p>
+        <p>Whether you're building a custom Nether adventure, designing a boss battle arena, or just want a twist on vanilla mob behavior, this addon brings a fresh take to one of Minecraft’s most iconic mobs. And the best part? No scripts are required! It's 100% data-driven and compatible with vanilla Minecraft.</p>
+    </div>
+
+    <h2 class="section-title">Screenshots & Features</h2>
+    
+    <div class="gallery">
+        <img src="https://placehold.co/400x250/34495e/ffffff?text=CHGFS+PICS" alt="CHGFS Item List View">
+        <img src="https://placehold.co/400x250/34495e/ffffff?text=CHGFS+PICS" alt="CHGFS Item List View">
+        <img src="https://placehold.co/400x250/34495e/ffffff?text=CHGFS+PICS" alt="CHGFS Item List View">
+    </div>
+    
+    <h2 class="section-title">Installation Guide</h2>
+    
+    <ol class="installation-steps">
+        <li>Test</li>
+    </ol>
+    
+    <div class="download-section">
+        <h3>Download Custom Happy Ghast Fly Speed Addon for Minecraft Bedrock</h3>
+        <p style="color: #ccc; font-size: 14px; margin-bottom: 20px;">
+            Click below to select the version and file type you need (Main File or Server File).
+        </p>
+        <button class="download-button" onclick="openDownloadModal()">
+            VIEW ALL DOWNLOADS
+        </button>
+        <p style="margin-top: 15px; font-size: 12px; color: #888;">File Size: Varies | Latest Update: Oct 29, 2025</p>
+    </div>
+    
+</main>
+
+<div id="downloadModal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Happy Ghast Fly Speed Addon</h2>
+            <button class="close-button" onclick="closeDownloadModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            
+            <h4 class="file-category-title">Main File (Client/Single-player)</h4>
+            <div class="file-list">
+                <a href="https://edge.forgecdn.net/files/7161/528/Custom%20Happy%20Ghast%20Fly%20Speed.mcpack?ft=140a88f571c6050f6a9875923077beeb&bd=nree296ht8" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>Custom Happy Ghast Fly Speed</span>
+                    <span class="file-meta">Client Side | 139.64 KB</span>
+                </a>
+            </div>
+
+            <h4 class="file-category-title">Server File (Dedicated Server)</h4>
+
+            <div class="file-list">
+                <a href="https://www.mediafire.com/file/9pva1aiy72yc546/0.25x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>0.25x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/0garav6tqxlf3v1/0.5x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>0.5x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/j81jtv0ueoz5zw6/0.75x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>0.75x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/whcoiqt2nf9hpxr/1.25x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>1.25x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/8tecoakqz6q8hak/1.5x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>1.5x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/1wqgmlz7vbc0kx6/1.75x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>1.75x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/nzy840eft5jne2h/2x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>2x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/usz5qvv0e9way02/2.25x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>2.25x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/he8u973ejm1fgsg/2.5x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>2.5x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/2y03adzw5ef7lba/2.75x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>2.75x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/ucwoge2o2e6kthb/3x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>3x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/fgiqi98gdcqpim2/3.25x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>3.25x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/e3maw8iyehh64vz/3.5x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>3.5x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/7ib045gj19orrxl/3.75x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>3.75x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/vf8a5erx33yuvjh/4x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>4x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/sg7pfvv69zk669p/4.25x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>4.25x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/3mkpd3xy8e6ijew/4.5x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>4.5x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/bgps13njage47p0/4.75x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>4.75x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/tpma00s61zxotrm/5x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>5x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/lqizznzmo906e38/5.25.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>5.25x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/i0kam941xkqtlef/5.5x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>5.5x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/c1bpcrt84pgd6hj/5.75x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>5.75x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/f0t9tvgyrgirhf9/6x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>6x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/zmighbwr7c6cvoj/6.25x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>6.25x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/082iehceog8xqrh/6.5x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>6.5x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/til6w8g4zyd8d41/6.75x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>6.75x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/njv0szk8n94wdbp/7x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>7x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/ocge7rvfz05yjyo/7.25x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>7.25x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/dcd8cihb4o2ylai/7.5x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>7.5x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/x7n4ga8kf2pf1lc/7.75x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>7.75x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/n8w7bvealj853vi/8x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>8x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/ys5qyvz8pn4pa93/8.25x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>8.25x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/cjigbji9ceudqul/8.5x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>8.5x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/gfikux5aahcbw0n/8.75x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>8.75x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/o1jodonimsxyylk/9x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>9x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/4zb1oyqe3swqpy5/9.25x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>9.25x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/f79eiicutltcr6d/9.5x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>9.5x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/sf6rpkz158jm8i3/9.75.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>9.75x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+                <a href="https://www.mediafire.com/file/rr5hq62bc04o9p9/10x.mcpack/file" class="file-item" target="_blank" onclick="closeDownloadModal()">
+                    <span>10x Speed</span>
+                    <span class="file-meta">Server Side | 64 KB</span>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+function openDownloadModal() {
+    const modal = document.getElementById('downloadModal');
+    // Remove 'hidden' class to trigger the transition for visibility
+    modal.classList.remove('hidden');
+}
+
+function closeDownloadModal() {
+    const modal = document.getElementById('downloadModal');
+    // Add 'hidden' class to hide the modal via CSS transitions
+    modal.classList.add('hidden');
+}
+
+// Close modal when clicking outside of the content area
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('downloadModal');
+    // Initialize as hidden to ensure correct transition state on load
+    modal.classList.add('hidden'); 
+    
+    modal.addEventListener('click', (e) => {
+        // If the click target is the overlay itself (not the content inside)
+        if (e.target === modal) {
+            closeDownloadModal();
+        }
+    });
+});
+</script>
+
+</body>
+</html>
